@@ -12,7 +12,6 @@ import scipy as sp
 from scipy.special import gammaln
 from scipy import sparse
 
-
 def sample_index(p):
     """
     Sample from the Multinomial distribution and return the sample index.
