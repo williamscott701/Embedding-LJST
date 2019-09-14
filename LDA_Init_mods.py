@@ -22,7 +22,10 @@ def word_indices(vec):
     of word indices. The word indices are between 0 and
     vocab_size-1. The sequence length is equal to the document length.
     """
-    return vec.nonzero()[0]
+    for idx in vec.nonzero()[0]:
+        for i in xrange(int(vec[idx])):
+            yield idx
+
 
 def log_multi_beta(alpha, K=None):
     """
@@ -50,6 +53,7 @@ class LdaSampler(object):
 
     def _initialize(self, matrix):
         n_docs, vocab_size = matrix.shape
+        self.matrix = np.copy(matrix)
 
         # number of times document m and topic z co-occur
         self.nmz = np.zeros((n_docs, self.n_topics))
@@ -82,18 +86,16 @@ class LdaSampler(object):
         parent = self.nzw[:, w]
         try:
             edge_dict[w]
-            children = self.nzw[:, edge_dict[w]]
-            children = np.where(children > 1, 1.0, 0.0)
-            topic_assignment = children.sum(1) * np.where(parent > 1, 1.0, 0.0)
-            sum_ = topic_assignment.sum()
-            if sum_:
-                topic_assignment = np.divide(topic_assignment, sum_)
+            C = sampler.phi()[:, edge_dict[w]]
+            children = np.eye(C.shape[0])[C.argmax(0)]
+            topic_assignment = children.sum(0)
+            topic_assignment = topic_assignment / self.matrix[m, :].sum()
             topic_assignment = np.exp(np.dot(self.lambda_param, topic_assignment))
         except:
             topic_assignment = np.exp(topic_assignment)
-            topic_assignment = np.divide(topic_assignment, topic_assignment.sum())
+            topic_assignment = topic_assignment / self.matrix[m, :].sum()
             pass
-        p_z = np.multiply(left, right) * topic_assignment[parent.argmax()]
+        p_z = np.multiply(left, right) * topic_assignment
         return np.divide(p_z, p_z.sum())
 
     def loglikelihood(self, docs_edges):
@@ -134,7 +136,7 @@ class LdaSampler(object):
         """
         V = self.nzw.shape[1]
         num = self.nzw + self.beta
-        num /= np.sum(num, axis=1)[:, np.newaxis]
+        num /= np.sum(num, axis=0)[np.newaxis, :]
         return num
     
     def theta(self):
@@ -157,7 +159,7 @@ class LdaSampler(object):
             worddict[t] = [vocab[i] for i in topWordIndices]
         return worddict
 
-    def run(self, matrix, edge_dict, maxiter=100):
+    def run(self, matrix, docs_edges, maxiter=100):
         """
         Run the Gibbs sampler.
         """
@@ -173,7 +175,7 @@ class LdaSampler(object):
                     self.nzw[z,w] -= 1
                     self.nz[z] -= 1
 
-                    p_z = self._conditional_distribution(m, w, edge_dict)
+                    p_z = self._conditional_distribution(m, w, docs_edges[m])
                     z = sample_index(p_z)
 
                     self.nmz[m,z] += 1
