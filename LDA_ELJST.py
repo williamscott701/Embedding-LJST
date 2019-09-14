@@ -5,12 +5,14 @@ Implementation of the collapsed Gibbs sampler for
 Latent Dirichlet Allocation, as described in
 Finding scientifc topics (Griffiths and Steyvers)
 """
+# Called EJLST - notest
 
 import numpy as np
 import datetime
 import scipy as sp
 from scipy.special import gammaln
 from scipy import sparse
+
 
 def sample_index(p):
     """

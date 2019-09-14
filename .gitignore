@@ -1,2 +1,3 @@
 nongit_resources/
 embeddings/
+*.pyc
