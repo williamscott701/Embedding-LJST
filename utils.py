@@ -55,12 +55,12 @@ def preprocess_lite(pd):
 def processReviews(reviews, window=5, MAX_VOCAB_SIZE=2000):
     vectorizer = CountVectorizer(analyzer="word",tokenizer=None, max_df=0.7, max_features=MAX_VOCAB_SIZE)
     count_matrix = vectorizer.fit_transform(reviews)
-    tfidf_vectorizer = TfidfVectorizer(max_features=MAX_VOCAB_SIZE, max_df=0.7)
-    tfidf_matrix = tfidf_vectorizer.fit_transform(reviews)
+#     tfidf_vectorizer = TfidfVectorizer(max_features=MAX_VOCAB_SIZE, max_df=0.7)
+    tfidf_matrix = None # tfidf_vectorizer.fit_transform(reviews).toarray()
     words = vectorizer.get_feature_names()
     vocabulary = dict(zip(words,np.arange(len(words))))
     inv_vocabulary = dict(zip(np.arange(len(words)),words))
-    return count_matrix.toarray(), tfidf_matrix.toarray(), vocabulary, words
+    return count_matrix.toarray(), None, vocabulary, words
 
 def get_cosine(a, b):
     return 1 - spatial.distance.cosine(a, b)

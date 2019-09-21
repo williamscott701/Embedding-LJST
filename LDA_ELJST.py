@@ -268,7 +268,7 @@ class LdaSampler(object):
                     self.nzws[z, w, s] -= 1
                     self.nzs[z, s] -= 1
 
-                    p_z = self._conditional_distribution(m, w, edge_dict)
+                    p_z = self._conditional_distribution(m, w, edge_dict[w])
                     ind = sample_index(p_z.flatten())
                     
                     z, s = np.unravel_index(ind, p_z.shape)
