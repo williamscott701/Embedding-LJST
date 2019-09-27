@@ -11,6 +11,7 @@ Finding scientifc topics (Griffiths and Steyvers)
 import numpy as np
 import scipy as sp
 from scipy.special import gammaln
+import traceback
 
 def sample_index(p):
     """
@@ -88,12 +89,15 @@ class LdaSampler(object):
         parent = self.nzw[:, w]
         try:
             edge_dict[w]
-            C = sampler.phi()[:, edge_dict[w]]
+            C = self.phi()[:, edge_dict[w]]
             children = np.eye(C.shape[0])[C.argmax(0)]
             topic_assignment = children.sum(0)
             topic_assignment = topic_assignment / self.matrix[m, :].sum()
             topic_assignment = np.exp(np.dot(self.lambda_param, topic_assignment))
-        except:
+        except Exception as e:
+            error_message = traceback.format_exc()
+            if "91" not in str(error_message):
+                print(error_message)
             topic_assignment = np.exp(topic_assignment)
             topic_assignment = topic_assignment / self.matrix[m, :].sum()
             pass
@@ -185,4 +189,3 @@ class LdaSampler(object):
                     self.nzw[z,w] += 1
                     self.nz[z] += 1
                     self.topics[(m,i)] = z
-        self.matrix = None

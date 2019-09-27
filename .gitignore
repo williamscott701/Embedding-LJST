@@ -1,3 +1,4 @@
 nongit_resources/
 embeddings/
+dumps/
 *.pyc

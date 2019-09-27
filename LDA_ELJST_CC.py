@@ -12,7 +12,7 @@ import datetime
 import scipy as sp
 from scipy.special import gammaln
 from scipy import sparse
-import traceback
+
 
 def sample_index(p):
     """
@@ -43,7 +43,7 @@ def log_multi_beta(alpha, K=None):
 
 class LdaSampler(object):
 
-    def __init__(self, matrix, sentiment, edge_dict, n_topics, n_sentiment, lambda_param=1.0, alpha=0.1, beta=0.1, gamma = 0.5, SentimentRange=5):
+    def __init__(self, n_topics, n_sentiment, lambda_param, alpha=0.1, beta=0.1, gamma = 0.5, SentimentRange=5):
         """
         n_topics: desired number of topics
         alpha: a scalar (FIXME: accept vector of size n_topics)
@@ -60,14 +60,15 @@ class LdaSampler(object):
         self.probabilities_ts = {}
         self.sentimentprior = {}
         self.sentiment = None
-        self._initialize(matrix, sentiment)
-        self.edge_dict = edge_dict
+
+#     def get_df_matrix(self):
+#         return np.array(self.df_matrix.todense())
 
     def _initialize(self, matrix, sentiment):
 
         n_docs, vocab_size = matrix.shape
         
-        self.matrix = np.copy(matrix)
+        matrix = np.copy(matrix)
         self.sentiment = sentiment.copy()
 
         # number of times document m and topic z co-occur
@@ -112,29 +113,39 @@ class LdaSampler(object):
         vocab_size = self.nzws.shape[1]
         left = (self.nzws[:, w, :] + self.beta) / (self.nzs + self.beta * vocab_size)
         right = (self.nmz[m,:] + self.alpha) / (self.nm[m] + self.alpha * self.n_topics)
-        gammaFactor = ((self.nmzs[m, :, :] + self.gammavec[m]).T/(self.nmz[m, :] + np.sum(self.gammavec[m]))).T
-        
-        topic_assignment = np.ones(self.nzws[:, 0, :].shape)
-        try:
-            edge_dict[w]
-            parent = self.nzws[:, w , :].sum(-1)
-            new_C = np.zeros((self.phi()[:, edge_dict[w], :].shape))
-            for idx, i in enumerate(edge_dict[w]):
-                C = self.phi()[:, i, :]
-                C[np.where(C == C.max())] = 1
-                C[np.where(C != C.max())] = 0
-                new_C[:, idx, :] = C
 
-            topic_assignment = new_C.sum(1)
-            topic_assignment /= topic_assignment.sum()
-            topic_assignment = np.exp(self.lambda_param * topic_assignment)
-        except Exception as e:
-            error_message = traceback.format_exc()
-            if "edge_dict[w]" not in str(error_message):
-                print(error_message)
-            pass
+        gammaFactor = np.zeros((self.n_topics, self.n_sentiment))
+        for z in range(self.n_topics):
+            gammaFactor[z,:] = (self.nmzs[m, z, :] + self.gammavec[m])/(self.nmz[m, z] + np.sum(self.gammavec[m]))
 
-        p_zs = left * right[:, np.newaxis] * gammaFactor * topic_assignment
+        topic_ass_sent = []
+        for z in range(self.n_topics):
+            topic_assignment = [0] * self.n_sentiment
+            parent = self.nzws[z, w , :]
+            try:
+                edge_dict[w]
+                children = []
+                for i in edge_dict[w]:
+                    children.append(self.nzws[z, i, :].tolist())
+                children = np.array(children)
+                children[children>1] = 1
+                for idx, i in enumerate(parent):
+                    t = 0
+                    if i>0:
+                        t =  sum(children[:, idx])
+                    topic_assignment[idx] = t
+                if sum(topic_assignment)>0:
+                    topic_assignment = np.exp(self.lambda_param * np.array((topic_assignment / sum(topic_assignment))))
+                    topic_assignment = topic_assignment / sum(topic_assignment)
+            except:
+                topic_assignment = np.exp(topic_assignment)
+                topic_assignment = topic_assignment / sum(topic_assignment)
+                pass
+            topic_ass_sent.append(topic_assignment)
+            
+        topic_ass_sent = np.array(topic_ass_sent)
+
+        p_zs = left * right[:, np.newaxis] * gammaFactor * topic_ass_sent
         p_zs /= np.sum(p_zs)
         return p_zs
 
@@ -180,6 +191,7 @@ class LdaSampler(object):
         """
         Compute phi = p(w|z).
         """
+#         V = self.nzws.shape[1]
         num = self.nzws + self.beta
         n = np.sum(num, axis=1)
         n = n[:, np.newaxis, :]
@@ -187,6 +199,7 @@ class LdaSampler(object):
         return num
     
     def theta(self):
+        V = self.nmz.shape[1]
         num = self.nmz + self.alpha
         num /= np.sum(num, axis=1)[:, np.newaxis]
         return num
@@ -214,16 +227,17 @@ class LdaSampler(object):
                 worddict[(t, s)] = [vocab[i] for i in topWordIndices]
         return worddict
 
-    def run(self, maxiter=100):
+    def run(self, matrix, sentiment, edge_dict, maxiter=100):
         """
         Run the Gibbs sampler.
         """
-        n_docs, vocab_size = self.matrix.shape
-        
+        n_docs, vocab_size = matrix.shape
+        self._initialize(matrix, sentiment)
+        self.edge_dict = edge_dict
+
         for it in xrange(maxiter):
-            print "Iteration", it
             for m in xrange(n_docs):
-                for i, w in enumerate(word_indices(self.matrix[m, :])):
+                for i, w in enumerate(word_indices(matrix[m, :])):
                     z = self.topics[(m,i)]
                     s = self.sentiments[(m,i)]
                     self.nmz[m, z] -= 1
@@ -232,7 +246,7 @@ class LdaSampler(object):
                     self.nzws[z, w, s] -= 1
                     self.nzs[z, s] -= 1
 
-                    p_z = self._conditional_distribution(m, w, self.edge_dict[m])
+                    p_z = self._conditional_distribution(m, w, edge_dict[w])
                     ind = sample_index(p_z.flatten())
                     
                     z, s = np.unravel_index(ind, p_z.shape)
@@ -245,5 +259,3 @@ class LdaSampler(object):
                     
                     self.topics[(m,i)] = z
                     self.sentiments[(m,i)] = s
-#         self.matrix = None
-#         self.sentiment = None
