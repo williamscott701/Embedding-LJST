@@ -43,7 +43,7 @@ def log_multi_beta(alpha, K=None):
 
 class LdaSampler(object):
 
-    def __init__(self, matrix, sentiment, edge_dict, n_topics, n_sentiment, lambda_param=1.0, alpha=0.1, beta=0.1, gamma = 0.5, SentimentRange=5):
+    def __init__(self, matrix, sentiment, docs_edges, words, vocabulary, n_topics, n_sentiment, lambda_param=1.0, alpha=0.1, beta=0.1, gamma = 0.5, SentimentRange=5):
         """
         n_topics: desired number of topics
         alpha: a scalar (FIXME: accept vector of size n_topics)
@@ -61,7 +61,26 @@ class LdaSampler(object):
         self.sentimentprior = {}
         self.sentiment = None
         self._initialize(matrix, sentiment)
-        self.edge_dict = edge_dict
+        self.words = words
+        self.vocabulary = vocabulary
+        
+        edge_dict__ = []
+        for doc in docs_edges:
+            edge_dict_ = {}
+            for i, j in doc:
+                try:
+                    edge_dict_[i] += [j]
+                except:
+                    edge_dict_[i] = [j]
+                try:
+                    edge_dict_[j] += [i]
+                except:
+                    edge_dict_[j] = [i]
+            edge_dict__.append(edge_dict_)
+            
+        self.edge_dict = edge_dict__
+        self.docs_edges = docs_edges
+        self.likelihood_history = []
 
     def _initialize(self, matrix, sentiment):
 
@@ -245,5 +264,4 @@ class LdaSampler(object):
                     
                     self.topics[(m,i)] = z
                     self.sentiments[(m,i)] = s
-#         self.matrix = None
-#         self.sentiment = None
+            self.likelihood_history.append(self.loglikelihood())
