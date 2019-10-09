@@ -1,5 +1,3 @@
-#### Imports
-
 from scipy import spatial, sparse
 from scipy.stats import chi2
 from collections import Counter
@@ -34,53 +32,48 @@ from sentiment import SentimentAnalysis
 
 ### Read Data
 
-dataset_name = "amazon_musical"
+dataset_name = "amazon_musical_topics_10_lambda_10_maxiter_20"
 
 dataset = pd.read_pickle("datasets/datadf_amazon_musical")
 
-dataset.head(2)
-
 count_matrix, _, vocabulary, words = my_utils.processReviews(dataset['text'].values)
-
-Counter(dataset['sentiment'])
-
-barren = np.where(count_matrix.sum(1)==0)[0]
-
-barren
 
 ratings = dataset['sentiment'].values
 
 ### Making Edge_Dict
 
-dataset_name
-
-pickle_in = open("resources/edges_amazon_musical_glove_nontrained_0.40.pickle","rb")
-docs_edges = pickle.load(pickle_in)
-
-docs_edges = np.delete(docs_edges, barren).tolist()
-
-## Run Model
-
 maxiter = 20
-lambda_param = 0.0
-N_SENTIMENT = 5
-n_topics = 5
+lambda_param = 10.0
+n_topics = 10
+n_sentiment = 5
 
 folder_name = str(datetime.datetime.now()) + "_" + dataset_name
 os.mkdir("dumps/"+folder_name)
 
-topics_grid = [5, 10]
+edge_list = ["amazon_musical_bert_0.2",
+             "amazon_musical_bert_0.3",
+             "amazon_musical_bert_0.4",
+             "amazon_musical_bert_0.5",
+             "amazon_musical_fasttext_0.2",
+             "amazon_musical_fasttext_0.3",
+             "amazon_musical_fasttext_0.4",
+             "amazon_musical_fasttext_0.5",
+             "amazon_musical_glove_0.20",
+             "amazon_musical_glove_0.30",
+             "amazon_musical_glove_0.40",
+             "amazon_musical_glove_0.50"]
 
 import multiprocessing
 
-def multiprocessing_func(k):
+def multiprocessing_func(edge_loc):
+    docs_edges = pickle.load(open("resources/"+edge_loc+".pickle","rb"))
     sampler = lda.LdaSampler(count_matrix, ratings, docs_edges, words, vocabulary,
-                         n_sentiment = N_SENTIMENT, n_topics=k, lambda_param=lambda_param)
+                         n_sentiment = n_sentiment, n_topics=n_topics, lambda_param=lambda_param)
 
-    print "Running Sampler...", k
+    print "Running Sampler...", edge_loc
     sampler.run(maxiter=maxiter)
-    joblib.dump(sampler, "dumps/" + folder_name + "/sampler_" + dataset_name + "_n_topics_" + str(k))
+    joblib.dump(sampler, "dumps/" + folder_name + "/sampler_" + edge_loc)
 
 pool = multiprocessing.Pool()
 
-pool.map(multiprocessing_func, topics_grid)
+pool.map(multiprocessing_func, edge_list)

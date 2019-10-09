@@ -221,19 +221,19 @@ class LdaSampler(object):
         """
         Returns top K discriminative words for topic t v for which p(v | t) is maximum
         """
-        pseudocounts = np.copy(self.nzws)
-        normalizer = np.sum(pseudocounts, axis = 2)
-        normalizer = np.sum(normalizer, axis = 0)
-        pseudocounts /= normalizer[np.newaxis, :,  np.newaxis]
+        pseudocounts = self.phi().copy() #np.copy(self.nzws)
+        #normalizer = np.sum(pseudocounts, axis = 2)
+        #normalizer = np.sum(normalizer, axis = 0)
+        #pseudocounts /= normalizer[np.newaxis, :,  np.newaxis]
         worddict = {}
         for t in range(self.n_topics):
             for s in range(self.n_sentiment):
                 worddict[(t, s)] = {}
-                topWordIndices = pseudocounts[t, :, s].argsort()[-(K+1):-1]
+                topWordIndices = pseudocounts[t, :, s].argsort()[-K:]
                 worddict[(t, s)] = [vocab[i] for i in topWordIndices]
         return worddict
 
-    def run(self, maxiter=100):
+    def run(self, maxiter=20):
         """
         Run the Gibbs sampler.
         """

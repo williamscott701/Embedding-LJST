@@ -43,7 +43,7 @@ def log_multi_beta(alpha, K=None):
 
 class LdaSampler(object):
 
-    def __init__(self, n_topics, lambda_param, alpha=0.1, beta=0.1):
+    def __init__(self, matrix, docs_edges, words, vocabulary, n_topics, lambda_param, alpha=0.1, beta=0.1):
         """
         n_topics: desired number of topics
         alpha: a scalar (FIXME: accept vector of size n_topics)
@@ -53,6 +53,27 @@ class LdaSampler(object):
         self.alpha = alpha
         self.beta = beta
         self.lambda_param = lambda_param
+        self.words = words
+        self.vocabulary = vocabulary
+        
+        edge_dict__ = []
+        for doc in docs_edges:
+            edge_dict_ = {}
+            for i, j in doc:
+                try:
+                    edge_dict_[i] += [j]
+                except:
+                    edge_dict_[i] = [j]
+                try:
+                    edge_dict_[j] += [i]
+                except:
+                    edge_dict_[j] = [i]
+            edge_dict__.append(edge_dict_)
+            
+        self.edge_dict = edge_dict__
+        self.docs_edges = docs_edges
+        self.likelihood_history = []
+        self._initialize(matrix)
 
     def _initialize(self, matrix):
         n_docs, vocab_size = matrix.shape
@@ -96,7 +117,7 @@ class LdaSampler(object):
             topic_assignment = np.exp(np.dot(self.lambda_param, topic_assignment))
         except Exception as e:
             error_message = traceback.format_exc()
-            if "91" not in str(error_message):
+            if "edge_dict[w]" not in str(error_message):
                 print(error_message)
             topic_assignment = np.exp(topic_assignment)
             topic_assignment = topic_assignment / self.matrix[m, :].sum()
@@ -104,7 +125,7 @@ class LdaSampler(object):
         p_z = np.multiply(left, right) * topic_assignment
         return np.divide(p_z, p_z.sum())
 
-    def loglikelihood(self, docs_edges):
+    def loglikelihood(self):
         """
         Compute the likelihood that the model generated the data.
         """
@@ -125,7 +146,7 @@ class LdaSampler(object):
         for i in xrange(n_docs):
             count = 0
             edges_count = 0
-            for a, b in (docs_edges[i]):
+            for a, b in (self.docs_edges[i]):
                 edges_count += 1
                 aa = self.nzw[:, a]
                 bb = self.nzw[:, b]
@@ -150,38 +171,53 @@ class LdaSampler(object):
         num = self.nmz + self.alpha
         num /= np.sum(num, axis=1)[:, np.newaxis]
         return num
-    
+
     def getTopKWords(self, K, vocab):
         """
         Returns top K discriminative words for topic t v for which p(v | t) is maximum
         """
-        pseudocounts = np.copy(self.nzw.T)
-        normalizer = np.sum(pseudocounts, (0))
-        pseudocounts /= normalizer[np.newaxis, :]
+        pseudocounts = self.phi().copy() #np.copy(self.nzws)
+        #normalizer = np.sum(pseudocounts, axis = 2)
+        #normalizer = np.sum(normalizer, axis = 0)
+        #pseudocounts /= normalizer[np.newaxis, :,  np.newaxis]
         worddict = {}
         for t in range(self.n_topics):
             worddict[t] = {}
-            topWordIndices = pseudocounts[:, t].argsort()[-(K+1):-1]
+            topWordIndices = pseudocounts[t, :].argsort()[-K:]
             worddict[t] = [vocab[i] for i in topWordIndices]
         return worddict
 
-    def run(self, matrix, docs_edges, maxiter=100):
+#     def getTopKWords(self, K, vocab):
+#         """
+#         Returns top K discriminative words for topic t v for which p(v | t) is maximum
+#         """
+#         pseudocounts = np.copy(self.nzw.T)
+#         normalizer = np.sum(pseudocounts, (0))
+#         pseudocounts /= normalizer[np.newaxis, :]
+#         worddict = {}
+#         for t in range(self.n_topics):
+#             worddict[t] = {}
+#             topWordIndices = pseudocounts[:, t].argsort()[-(K+1):-1]
+#             worddict[t] = [vocab[i] for i in topWordIndices]
+#         return worddict
+
+    def run(self, maxiter=100):
         """
         Run the Gibbs sampler.
         """
-        n_docs, vocab_size = matrix.shape
-        self._initialize(matrix)
+        n_docs, vocab_size = self.matrix.shape
 
         for it in xrange(maxiter):
+            print "Iteration", it
             for m in xrange(n_docs):
-                for i, w in enumerate(word_indices(matrix[m, :])):
+                for i, w in enumerate(word_indices(self.matrix[m, :])):
                     z = self.topics[(m,i)]
                     self.nmz[m,z] -= 1
                     self.nm[m] -= 1
                     self.nzw[z,w] -= 1
                     self.nz[z] -= 1
 
-                    p_z = self._conditional_distribution(m, w, docs_edges[m])
+                    p_z = self._conditional_distribution(m, w, self.edge_dict[m])
                     z = sample_index(p_z)
 
                     self.nmz[m,z] += 1
@@ -189,3 +225,4 @@ class LdaSampler(object):
                     self.nzw[z,w] += 1
                     self.nz[z] += 1
                     self.topics[(m,i)] = z
+            self.likelihood_history.append(self.loglikelihood())

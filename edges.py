@@ -1,5 +1,3 @@
-#### Imports
-
 from collections import Counter
 
 import copy
@@ -20,20 +18,17 @@ dataset = pd.read_pickle("datasets/datadf_amazon_musical")
 
 count_matrix, _, vocabulary, words = my_utils.processReviews(dataset['text'].values)
 
-print count_matrix.shape
+from allennlp.commands.elmo import ElmoEmbedder
 
-print "loading embeddings"
+elmo = ElmoEmbedder()
 
-embeddings_index = gensim.models.KeyedVectors.load_word2vec_format("nongit_resources/wiki-news-300d-1M.vec")
+result = elmo.embed_sentence(words) # taking only second layer
 
 words_embeddings = {}
-for i in words:
-    try:
-        words_embeddings[i] = embeddings_index[i]
-    except:
-        pass
-    
-print len(words_embeddings)
+for idx, i in enumerate(result[2]):
+    words_embeddings[words[idx]] = i
+
+### Embeddings
 
 embeddings_index = None
 
@@ -43,46 +38,36 @@ edge_embeds_multi = []
 for i, j in combinations(words_with_embeddings, 2):
     edge_embeds_multi.append((words_embeddings[i], words_embeddings[j]))
 
-len(edge_embeds_multi)
-
-n_cores = 30
+n_cores = 20
 
 pool = multiprocessing.Pool(n_cores)
 embeddings_cosines = pool.map(my_utils.get_cosine_multi, edge_embeds_multi)
 pool.close()
-
-print "loading edge_embeddings"
 
 edge_embeddings = {}
 for idx, (i, j) in enumerate(combinations(words_with_embeddings, 2)):
     edge_embeddings[(i, j)] = embeddings_cosines[idx]
     edge_embeddings[(j, i)] = embeddings_cosines[idx]
 
+edges_threshold_all = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+
 def get_edges_per_doc(doc):
-    edges, edges_all = [], []
+    edges = [[] for i in range(len(edges_threshold_all))]
+    edges_sim = [[] for i in range(len(edges_threshold_all))]
     for i in doc:
         for j in doc:
             if i != j and i in words_with_embeddings and j in words_with_embeddings:
                 sim = edge_embeddings[(i, j)]
-                if sim > edges_threshold and (vocabulary[i], vocabulary[j]) not in edges and (vocabulary[j], vocabulary[i]) not in edges:
-                    edges.append((vocabulary[i], vocabulary[j]))
-                    edges_all.append((i, j, sim))
-    return (edges, edges_all)
+                for idx, edges_threshold in enumerate(edges_threshold_all):
+                    if sim > edges_threshold and (vocabulary[i], vocabulary[j]) not in edges[idx] and (vocabulary[j], vocabulary[i]) not in edges[idx]:
+                        edges[idx] += [(vocabulary[i], vocabulary[j])]
+                        edges_sim[idx] += [(i, j, sim)]
+    return edges, edges_sim
 
-edges_threshold = 0.00
+pool = multiprocessing.Pool(n_cores)
+docs_edges_multi = pool.map(get_edges_per_doc, dataset['cleaned'].values)
+pool.close()
 
-for edges_threshold in [0.60, 0.50, 0.40, 0.30, 0.20, 0.10, 0.00]:
-    
-    print edges_threshold
-    
-    pool = multiprocessing.Pool(n_cores)
-    docs_edges_multi = pool.map(get_edges_per_doc, dataset['cleaned'].values)
-    pool.close()
-
-    docs_edges = [i[0] for i in docs_edges_multi]
-
-    docs_edges_all = [i[1] for i in docs_edges_multi]
-
-    pickle_out = open("resources/amazon_musical_fasttext_" + str(edges_threshold) + ".pickle","wb")
-    pickle.dump(docs_edges, pickle_out)
-    pickle_out.close()
+pickle_out = open("docs_edges_multi.pickle","wb")
+pickle.dump(docs_edges_multi, pickle_out, protocol=2)
+pickle_out.close()
