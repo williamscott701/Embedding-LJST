@@ -3,3 +3,4 @@ embeddings/
 dumps/
 resources/
 *.pyc
+**/.DS_Store
