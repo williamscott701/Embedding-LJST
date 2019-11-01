@@ -136,8 +136,13 @@ def kl_score_multi(comb):
     pk, qk = comb[0], comb[1]
     return (scipy.stats.entropy(pk, qk)*.5 + scipy.stats.entropy(qk,pk)*.5)
 
-def get_hscore_multi(dt_distribution, X, k):
-    testlen = X.shape[0]
+def get_hscore_multi(dt_distribution_, X_, k, testlen):
+    
+    index = np.random.choice(X_.shape[0], testlen, replace=False)
+    
+    dt_distribution = dt_distribution_[index]
+    X = X_[index]
+
     all_kl_scores = np.zeros((testlen, testlen))
 
     combinations = []
