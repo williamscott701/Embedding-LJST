@@ -232,23 +232,23 @@ class SentimentLDAGibbsSampler:
             for t in range(self.numTopics):
                 sentimentDistribution[t, :] = sampleFromDirichlet(gammaVec)
             
-            temp = SkipGramVectorizer(analyzer="word",stop_words=stopwords.words(),max_features=MAX_VOCAB_SIZE, k = skipgramwindow, ngram_range=(2,2))
+            temp = SkipGramVectorizer(analyzer="word", max_features=MAX_VOCAB_SIZE, k=skipgramwindow, ngram_range=(2,2))
             try:
                 train_data_features = temp.fit_transform([allreviews[d]])
                 bigrams = temp.get_feature_names()
                 self.totalbigrams += bigrams
                 self.allbigrams[d] = bigrams
-                
+
                 for i, w in enumerate(self.allbigrams[d]):
                     t = sampleFromCategorical(topicDistribution)
                     s = sampleFromCategorical(sentimentDistribution[t, :])
-                            
+
                     word1 = w.split()[0]
                     word2 = w.split()[1]
                     if word1 in self.vocabulary and word2 in self.vocabulary:
                         i1 = self.vocabulary[word1]
                         i2 = self.vocabulary[word2]
-                        
+
                         self.topics[(d, i)] = t
                         self.sentiments[(d, i)] = s
                         self.n_dt[d, t] += 1
@@ -303,8 +303,14 @@ class SentimentLDAGibbsSampler:
 
             if mrf == True and self.lambda_param != 0:
                 all_children = np.zeros(self.wordOccuranceMatrix_shape).astype(int)
+                all_children_2 = np.zeros(self.wordOccuranceMatrix_shape).astype(int)
                 try:
-                    all_children[similar_words[v]] = 1
+                    all_children[similar_words[i1]] = 1
+                except:
+                    pass
+                
+                try:
+                    all_children_2[similar_words[i2]] = 1
                 except:
                     pass
 
@@ -315,14 +321,14 @@ class SentimentLDAGibbsSampler:
                 topic_assignment /= topic_assignment.sum()
                 topic_assignment1 = np.exp(self.lambda_param * topic_assignment)
 
-                all_children = similar_words[i2,:] #[d][i2,:]
-                new_C = self.vts[all_children,:, :]
+#                 all_children = similar_words[i2,:] #[d][i2,:]
+                new_C = self.vts[all_children_2,:, :]
                 topic_assignment = new_C.sum(0)
                 topic_assignment /= topic_assignment.sum()
                 topic_assignment2 = np.exp(self.lambda_param * topic_assignment)
-        
-        if debug_mode == True:
-            print (probabilities_ts, topic_assignment1, topic_assignment2)
+
+                if debug_mode == True:
+                    print(similar_words[i2], similar_words[i1])
         probabilities_ts *= topic_assignment1 * topic_assignment2
         probabilities_ts /= np.sum(probabilities_ts)
 

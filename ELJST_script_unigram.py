@@ -145,6 +145,9 @@ class SentimentLDAGibbsSampler:
         self.alphaVec = self.alpha.copy()
         self.gammaVec = self.gamma.copy()
         
+        self.docs_edges = []
+        self.loglikelihood_history = []
+        
         for d in range(numDocs):
 
             if d < numDocswithlabels:
@@ -241,6 +244,68 @@ class SentimentLDAGibbsSampler:
                 worddict[(t,s)] = [vocab[i] for i in topWordIndices]
         return worddict
 
+    def loglikelihood(self):
+        """
+        Compute the likelihood that the model generated the data.
+        """
+        vocab_size = self.n_vts.shape[0]
+        n_docs = self.n_dt.shape[0]
+        lik = 0
+
+        alpha = self.n_vts+self.beta
+        lik += np.sum(gammaln(alpha).sum(0) - gammaln(alpha.sum(0)))
+        lik -= (vocab_size*gammaln(self.beta) - gammaln(vocab_size*self.beta)) * self.numTopics * self.numSentiments
+
+        sentimentprior = np.array([self.sentimentprior[i] for i in self.sentimentprior.keys()])
+        n_dts = self.n_dts.copy()
+        for z in range(self.numTopics):
+            n_dts[:, z, :] = n_dts[:, z, :] + sentimentprior
+        lik += np.sum(gammaln(n_dts).sum(2) - gammaln(n_dts.sum(2)))
+        lik -= np.sum(gammaln(sentimentprior).sum(1) - gammaln(sentimentprior.sum(1))) * self.numTopics
+
+        alpha = self.n_dt+self.alpha
+        lik += np.sum(gammaln(alpha).sum(1) - gammaln(alpha.sum(1)))
+        lik -= n_docs * (self.numTopics*gammaln(self.alpha.sum()) - gammaln(self.numTopics * self.alpha.sum()))
+
+        for i in range(n_docs):
+            edges_count = len(self.docs_edges[i])
+            if edges_count:
+                t = np.array(self.docs_edges[i])
+                aa = t[:, 0]
+                bb = t[:, 1]
+                cc = (self.n_vts[aa, :, :].argmax(1) == self.n_vts[bb, :, :].argmax(1)).sum(0)
+                lik += np.sum(np.log(np.exp(self.lambda_param*cc/edges_count)))
+
+    #     for z in range(self.numTopics):
+    #         for s in range(self.numSentiments):
+    #             lik += log_multi_beta(self.n_vts[:, z, s]+self.beta)
+    #             lik -= log_multi_beta(self.beta, vocab_size)
+
+    #     for m in range(n_docs):
+    #         for z in range(self.numTopics):
+    #             alpha = self.n_dts[m, z, :]+self.sentimentprior[m]
+    #             lik += np.sum(gammaln(alpha)) - gammaln(np.sum(alpha))
+    #             alpha = self.sentimentprior[m]
+    #             lik -= np.sum(gammaln(alpha)) - gammaln(np.sum(alpha))
+
+    #     for m in range(n_docs):
+    #         lik += log_multi_beta(self.n_dt[m,:]+self.alpha)
+    #         lik -= log_multi_beta(self.alpha.sum(), self.numTopics)
+
+    #     for i in range(n_docs):
+    #         for s in range(self.numSentiments):
+    #             count = 0
+    #             edges_count = 0
+    #             for a, b in (docs_edges[i]):
+    #                 edges_count += 1
+    #                 aa = self.n_vts[a, :, s]
+    #                 bb = self.n_vts[b, :, s]
+    #                 if aa.argmax() == bb.argmax():
+    #                     count += 1
+    #             if edges_count > 0:
+    #                 lik += np.log(np.exp(self.lambda_param*count/edges_count))
+    
+        return lik
 
     def run(self, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100):
         """
@@ -249,6 +314,15 @@ class SentimentLDAGibbsSampler:
         #self._initialize_(reviews, labels, unlabeled_reviews)
         self.loglikelihoods = np.zeros(maxIters)
         numDocs, vocabSize = self.wordOccuranceMatrix.shape
+        
+        self.docs_edges = []
+        for i in similar_words:
+            edges = []
+            for j in i.keys():
+                for p in i[j]:
+                    edges.append([j, p])
+            self.docs_edges.append(edges)
+        
         for iteration in tqdm(range(maxIters)):
             print ("Starting iteration %d of %d" % (iteration + 1, maxIters))
             loglikelihood = 0
@@ -318,4 +392,5 @@ class SentimentLDAGibbsSampler:
                 
                 self.alphaVec *= numerator / denominator     
                 self.alphaVec = np.maximum(self.alphaVec,self.alpha)
+            self.loglikelihood_history.append(self.loglikelihood())
                 

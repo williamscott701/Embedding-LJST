@@ -37,6 +37,7 @@ def preprocess(pd):
     pd = pd.str.join(' ')
     
     pd = pd.apply(lambda x: [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(x)])    
+    pd = pd.apply(lambda x: [lemmatizer.lemmatize(w, 'v') for w in x])
     pd = pd.apply(lambda x: [item for item in x if item not in stop_words])
     pd = pd.apply(lambda x: [item for item in x if len(item)>1])
     return pd
