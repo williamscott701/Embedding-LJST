@@ -283,8 +283,8 @@ class SentimentLDAGibbsSampler:
         lik = 0
 
         alpha = self.n_vts+self.beta
-        lik += np.sum(gammaln(alpha).sum(0) - gammaln(alpha.sum(0)))
-        lik -= (vocab_size*gammaln(self.beta) - gammaln(vocab_size*self.beta)) * self.numTopics * self.numSentiments
+        lik += 2*(np.sum(gammaln(alpha).sum(0) - gammaln(alpha.sum(0))))
+        lik -= 2*((vocab_size*gammaln(self.beta) - gammaln(vocab_size*self.beta)) * self.numTopics * self.numSentiments)
 
         sentimentprior = np.array([self.sentimentprior[i] for i in self.sentimentprior.keys()])
         n_dts = self.n_dts.copy()
@@ -308,8 +308,8 @@ class SentimentLDAGibbsSampler:
 
     #     for z in range(self.numTopics):
     #         for s in range(self.numSentiments):
-    #             lik += log_multi_beta(self.n_vts[:, z, s]+self.beta)
-    #             lik -= log_multi_beta(self.beta, vocab_size)
+    #             lik += 2*log_multi_beta(self.n_vts[:, z, s]+self.beta)
+    #             lik -= 2*log_multi_beta(self.beta, vocab_size)
 
     #     for m in range(n_docs):
     #         for z in range(self.numTopics):
