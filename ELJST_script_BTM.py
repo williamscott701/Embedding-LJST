@@ -29,7 +29,8 @@ from nltk import word_tokenize,sent_tokenize, pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from tqdm import tqdm_notebook as tqdm
-from tqdm import trange
+# from tqdm import tqdm
+# from tqdm import trange
 from scipy.special import gammaln
 
 st = PorterStemmer()
@@ -336,7 +337,10 @@ class SentimentLDAGibbsSampler:
     #                 lik += np.log(np.exp(self.lambda_param*count/edges_count))
     
         return lik
-
+    
+    def perplexity(self):
+        return np.exp(-self.loglikelihood()/self.wordOccuranceMatrix.sum())
+    
     def conditionalDistribution(self, d, v, similar_words, mrf = True, debug_mode=False):
         """
         Calculates the (topic, sentiment) probability for word v in document d
@@ -453,7 +457,7 @@ class SentimentLDAGibbsSampler:
             self.docs_edges.append(edges)
         
         for iteration in tqdm(range(maxIters)):
-            print ("Starting iteration %d of %d" % (iteration + 1, maxIters))
+            print("Starting iteration %d of %d" % (iteration + 1, maxIters))
             loglikelihood = 0
             for idx, d in enumerate(tqdm(range(numDocs))):
             

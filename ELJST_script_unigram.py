@@ -23,6 +23,7 @@ from scipy.special import gammaln, psi
 from hyperopt import fmin, tpe, hp, Trials, STATUS_OK, space_eval
 import ast
 from tqdm import tqdm_notebook as tqdm
+# from tqdm import tqdm
 from tqdm import trange
 
 st = PorterStemmer()
@@ -68,7 +69,7 @@ def word_indices(wordOccuranceVec):
             
 class SentimentLDAGibbsSampler:
 
-    def __init__(self, numTopics, alpha, beta, gamma, numSentiments=100, minlabel=0, maxlabel=10, SentimentRange = 10, max_df = .4, min_df = 5, max_features = MAX_VOCAB_SIZE, lambda_param = 1):
+    def __init__(self, numTopics, alpha, beta, gamma, numSentiments=100, minlabel=0, maxlabel=10, SentimentRange = 10, max_df = .7, min_df = .05, max_features = MAX_VOCAB_SIZE, lambda_param = 1):
         """
         numTopics: Number of topics in the model
         numSentiments: Number of sentiments (default 2)
@@ -98,9 +99,10 @@ class SentimentLDAGibbsSampler:
 
     def processReviews(self, reviews):
         #self.vectorizer = SkipGramVectorizer(analyzer="word",stop_words="english",max_features=MAX_VOCAB_SIZE,max_df=.75,min_df=10, k = window,ngram_range=(1,1))
-        self.vectorizer = CountVectorizer(analyzer="word",tokenizer=None,preprocessor=None,stop_words="english",max_features=self.max_features,max_df=self.max_df,min_df=self.min_df)
+        self.vectorizer = CountVectorizer(analyzer="word",tokenizer=None,preprocessor=None,stop_words="english",max_features=self.max_features,max_df=self.max_df, min_df=self.min_df)
         train_data_features = self.vectorizer.fit_transform(reviews)
         self.words = self.vectorizer.get_feature_names()
+        print(len(self.words), train_data_features.toarray().shape)
         self.vocabulary = dict(zip(self.words,np.arange(len(self.words))))
         self.inv_vocabulary = dict(zip(np.arange(len(self.words)),self.words))
         wordOccurenceMatrix = train_data_features.toarray()
@@ -306,6 +308,9 @@ class SentimentLDAGibbsSampler:
     #                 lik += np.log(np.exp(self.lambda_param*count/edges_count))
     
         return lik
+    
+    def perplexity(self):
+        return np.exp(-self.loglikelihood()/self.wordOccuranceMatrix.sum())
 
     def run(self, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100):
         """
@@ -323,10 +328,10 @@ class SentimentLDAGibbsSampler:
                     edges.append([j, p])
             self.docs_edges.append(edges)
         
-        for iteration in tqdm(range(maxIters)):
+        for iteration in range(maxIters):
             print ("Starting iteration %d of %d" % (iteration + 1, maxIters))
             loglikelihood = 0
-            for idx, d in enumerate(tqdm(range(numDocs))):
+            for idx, d in enumerate(trange(numDocs)):
 #                 print(idx)
                 #print ("start time {}".format(time()))
                 for i, v in enumerate(word_indices(self.wordOccuranceMatrix[d, :])):

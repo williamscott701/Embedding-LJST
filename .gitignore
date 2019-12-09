@@ -2,5 +2,6 @@ nongit_resources/
 embeddings/
 dumps/
 resources/
+datasets/
 *.pyc
 **/.DS_Store
