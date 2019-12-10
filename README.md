@@ -1,11 +1,10 @@
 # Embedding-LJST
 ## Baselines
 - LDA (Sklearn)
-- BTM
-- JST
-- ETM (MRF-LDA)
-- SLDA
-https://papers.nips.cc/paper/3328-supervised-topic-models.pdf
+- BTM http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.402.4032&rep=rep1&type=pdf
+- JST https://hal.archives-ouvertes.fr/hal-01762995/document
+- ETM (MRF-LDA) https://arxiv.org/pdf/1609.08496.pdf
+- SLDA https://papers.nips.cc/paper/3328-supervised-topic-models.pdf
 
 ## Methodology
 We intend to make use of the similar words based on the embeddings of language models to learn the latent factors better. This helps to put the co-related words into same topic. We add a sentiment layer on top for directed learning.
