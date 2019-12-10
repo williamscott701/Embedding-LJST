@@ -30,7 +30,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from tqdm import tqdm_notebook as tqdm
 # from tqdm import tqdm
-# from tqdm import trange
+from tqdm import trange
 from scipy.special import gammaln
 
 st = PorterStemmer()
@@ -220,6 +220,8 @@ class SentimentLDAGibbsSampler:
         self.allbigrams = {}
         self.totalbigrams = []
         
+        self.wordoccurancematrixbigram = 0
+        
         for d in range(numDocs):
 
             if d < numDocswithlabels:
@@ -264,6 +266,7 @@ class SentimentLDAGibbsSampler:
                         self.n_vts[i2, t, s] += 1
                         self.vts[i1, t, s] = 1
                         self.vts[i2, t, s] = 1
+                self.wordoccurancematrixbigram += train_data_features.sum()
             except:
                 pass
 
@@ -339,7 +342,7 @@ class SentimentLDAGibbsSampler:
         return lik
     
     def perplexity(self):
-        return np.exp(-self.loglikelihood()/self.wordOccuranceMatrix.sum())
+        return np.exp(-self.loglikelihood()/self.wordoccurancematrixbigram)
     
     def conditionalDistribution(self, d, v, similar_words, mrf = True, debug_mode=False):
         """
@@ -456,10 +459,10 @@ class SentimentLDAGibbsSampler:
                     edges.append([j, p])
             self.docs_edges.append(edges)
         
-        for iteration in tqdm(range(maxIters)):
+        for iteration in range(maxIters):
             print("Starting iteration %d of %d" % (iteration + 1, maxIters))
             loglikelihood = 0
-            for idx, d in enumerate(tqdm(range(numDocs))):
+            for idx, d in enumerate(trange(numDocs)):
             
                 if d in self.allbigrams:
                     
