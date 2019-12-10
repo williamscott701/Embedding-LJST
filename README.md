@@ -5,8 +5,12 @@
 - JST
 - ETM (MRF-LDA)
 - SLDA
+https://papers.nips.cc/paper/3328-supervised-topic-models.pdf
 
 ## Methodology
+We intend to make use of the similar words based on the embeddings of language models to learn the latent factors better. This helps to put the co-related words into same topic. We add a sentiment layer on top for directed learning.
+
+- Added sentiment layer on top of the LDA.
 - Making use of Markov Random Field to learn latent factors better.
 - Edges are connections across words to which we will share the latent factors
 - Building both Unigram and Bigram model (skipgram) for the following two models.
