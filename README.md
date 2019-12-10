@@ -15,12 +15,12 @@ We intend to make use of the similar words based on the embeddings of language m
 - Building both Unigram and Bigram model (skipgram) for the following two models.
 - We use BERT/XLNet for the embeddings.
 
-#### Model 1:
+#### Model 1
 - Making use of bert Trained models to give out the embeddings which inturn helps to compute the cosine similarity.
 - We make use of the cosine similarity to form the edges between the words in a document.
 - The edges are formed locally among documents and not globally.
 
-#### Model 2:
+#### Model 2
 - Training Bert/XLNet
 - Using attention values from bert, xlnet to find the closely related word which is suitable for the next word prediction
 - Witha a particular threshold, taking those values as the edges.
