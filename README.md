@@ -1,5 +1,12 @@
 # Embedding-LJST
-### Methodology
+## Baselines
+- LDA (Sklearn)
+- BTM
+- JST
+- ETM (MRF-LDA)
+- SLDA
+
+## Methodology
 - Making use of Markov Random Field to learn latent factors better.
 - Edges are connections across words to which we will share the latent factors
 - Building both Unigram and Bigram model (skipgram) for the following two models.
