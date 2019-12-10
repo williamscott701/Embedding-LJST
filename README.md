@@ -27,7 +27,7 @@ We intend to make use of the similar words based on the embeddings of language m
 
 
 ## Datasets Used:
-1. https://s3.amazonaws.com/amazon-reviews-pds/readme.html
+1. Amazon Reviews Dataset: http://jmcauley.ucsd.edu/data/amazon/
 2. Optum Internal Dataset.
 
 ## Results
