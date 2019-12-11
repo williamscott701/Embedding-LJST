@@ -25,8 +25,15 @@ We intend to make use of the similar words based on the embeddings of language m
 - Using attention values from bert, xlnet to find the closely related word which is suitable for the next word prediction
 - Witha a particular threshold, taking those values as the edges.
 
+## Evaluation Metrics
+- Coherence Score
+- Schiloute Score
+- Davies Bouldin Score
+- H Score (2000 docs)
+- Loglikelihood
+- Perplexity
 
-## Datasets Used:
+## Datasets Used
 1. Amazon Reviews Dataset: http://jmcauley.ucsd.edu/data/amazon/
 2. Optum Internal Dataset.
 
