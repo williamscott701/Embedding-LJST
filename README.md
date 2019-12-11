@@ -33,6 +33,12 @@ We intend to make use of the similar words based on the embeddings of language m
 - Loglikelihood
 - Perplexity
 
+## How to run
+- Load the datasets from Dataset 1
+- Run Test_ELJST_Onetime.ipynb which generates the "processed pandas file" and "edges"
+- Number of documents can be configured in Test_ELJST_Onetime.ipynb
+- Now Test_ELJST_Unigram.ipynb or Test_ELJST_BTM.ipynb should be run to get the results
+
 ## Datasets Used
 1. Amazon Reviews Dataset: http://jmcauley.ucsd.edu/data/amazon/
 2. Optum Internal Dataset.
