@@ -1,0 +1,12 @@
+hello
+hi
+he
+see
+all
+hidden
+states
+andjakhsdfljalsdjfks
+attentkjlashdflasions
+[UNK]
+[SEP]
+[CLS]
