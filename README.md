@@ -27,11 +27,11 @@ We intend to make use of the similar words based on the embeddings of language m
 
 ## Evaluation Metrics
 - Coherence Score
-- Schiloute Score
+- Silhouette Score
 - Davies Bouldin Score
-- H Score (2000 docs)
+- H Score (2000 test docs)
 - Loglikelihood
-- Perplexity
+- Perplexity (Hold out data)
 
 ## How to run
 - Load the datasets from Dataset 1
