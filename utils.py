@@ -53,9 +53,9 @@ def preprocess(pd):
     pd = pd.apply(lambda x: [lemmatizer.lemmatize(w, 'v') for w in x])
     pd = pd.apply(lambda x: [item for item in x if item not in stop_words])
     pd = pd.apply(lambda x: [item for item in x if len(item)>3])
+    pd = pd.apply(lambda x: [i[0] for i in nltk.pos_tag(x) if i[1] in ['JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NNPS']])
     pd = pd.apply(lambda x: " ".join(x))
     return pd
-
 
 # def preprocess(pd):
 #     pd = pd.str.lower()

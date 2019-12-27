@@ -1,2 +1,2 @@
 #!/bin/bash
-python ELJST_Train.py
+python nomain.py
