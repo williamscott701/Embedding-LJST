@@ -1,0 +1,62 @@
+amazon_electronics_20000 entered
+amazon_home_20000 entered
+amazon_kindle_20000 entered
+amazon_movies_20000 entered
+imdb_reviews_20000 entered
+twitter_airline_9061 entered
+1394 (9061, 1394)
+3783 (20000, 3783)
+3998 (20000, 3998)
+4936 (20000, 4936)
+5863 (20000, 5863)
+8783 (20000, 8783)
+** twitter_airline_9061 0
+** amazon_kindle_20000 0
+** amazon_home_20000 0
+** amazon_movies_20000 0
+** amazon_electronics_20000 0
+** twitter_airline_9061 1
+** imdb_reviews_20000 0
+** twitter_airline_9061 2
+** twitter_airline_9061 3
+** twitter_airline_9061 4
+** twitter_airline_9061 5
+** twitter_airline_9061 6
+** twitter_airline_9061 7
+** twitter_airline_9061 8
+** twitter_airline_9061 9
+** twitter_airline_9061 10
+** twitter_airline_9061 11
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** amazon_kindle_20000 1
+** imdb_reviews_20000 1
+** amazon_electronics_20000 1
+** amazon_movies_20000 1
+** amazon_home_20000 1
+** amazon_kindle_20000 2
+** imdb_reviews_20000 2
+** amazon_electronics_20000 2
+** amazon_movies_20000 2
+** amazon_home_20000 2
+** amazon_kindle_20000 3
+** imdb_reviews_20000 3
+** amazon_movies_20000 3
+** amazon_electronics_20000 3
+** amazon_home_20000 3
+** amazon_kindle_20000 4
+** imdb_reviews_20000 4
+** amazon_movies_20000 4
+** amazon_electronics_20000 4
+** amazon_home_20000 4
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** amazon_kindle_20000 5
+** imdb_reviews_20000 5
+** amazon_electronics_20000 5
+** amazon_home_20000 5
+** amazon_kindle_20000 6

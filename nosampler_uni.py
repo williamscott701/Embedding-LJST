@@ -18,95 +18,68 @@ import ELJST_script_unigram as lda
 import matplotlib.pyplot as plt
 
 
-grid = [['amazon_electronics_100000_dataset', 'amazon_electronics_100000_bert_0.95', 1.0],
-        ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_bert_attention', 1.0],
-        ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_fasttext_0.3', 1.0],
-        ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_fasttext_0.6', 1.0],
-        ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_glove_0.3', 1.0],
-        ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_glove_0.6', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_bert_0.95', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_bert_attention', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_fasttext_0.3', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_fasttext_0.6', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_glove_0.3', 1.0],
-        ['amazon_home_100000_dataset', 'amazon_home_100000_glove_0.6', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_bert_0.95', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_bert_attention', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_fasttext_0.3', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_fasttext_0.6', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_glove_0.3', 1.0],
-        ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_glove_0.6', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_bert_0.95', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_bert_attention', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_fasttext_0.3', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_fasttext_0.6', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_glove_0.3', 1.0],
-        ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_glove_0.6', 1.0]]
 
+grid = [['amazon_electronics_20000', 'bert_0.95'],
+        ['amazon_electronics_20000', 'bert_attention'],
+        ['amazon_electronics_20000', 'fasttext_0.3'],
+        ['amazon_electronics_20000', 'fasttext_0.6'],
+        ['amazon_electronics_20000', 'glove_0.3'],
+        ['amazon_electronics_20000', 'glove_0.6'],
         
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_bert_0.95', 0.0],
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_bert_attention', 0.0],
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_fasttext_0.3', 0.0],
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_fasttext_0.6', 0.0],
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_glove_0.3', 0.0],
-#         ['amazon_electronics_100000_dataset', 'amazon_electronics_100000_glove_0.6', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_bert_0.95', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_bert_attention', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_fasttext_0.3', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_fasttext_0.6', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_glove_0.3', 0.0],
-#         ['amazon_home_100000_dataset', 'amazon_home_100000_glove_0.6', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_bert_0.95', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_bert_attention', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_fasttext_0.3', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_fasttext_0.6', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_glove_0.3', 0.0],
-#         ['amazon_kindle_100000_dataset', 'amazon_kindle_100000_glove_0.6', 0.0],
-#         ['amazon_movies_100000_dataset', 'amazon_movies_100000_fasttext_0.3', 0.0],
-#         ['amazon_movies_100000_dataset', 'amazon_movies_100000_fasttext_0.6', 0.0],
-#         ['amazon_movies_100000_dataset', 'amazon_movies_100000_glove_0.3', 0.0],
-#         ['amazon_movies_100000_dataset', 'amazon_movies_100000_glove_0.6', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_bert_0.95', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_bert_attention', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_fasttext_0.3', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_fasttext_0.6', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_glove_0.3', 0.0],
-#         ['imdb_reviews_47405_dataset', 'imdb_reviews_47405_glove_0.6', 0.0],]
-def get_scores(name, sampler):
-    
-    ss = silhouette_score(euclidean_distances(sampler.wordOccuranceMatrix),
-                 sampler.dt_distribution.argmax(axis=1), metric='precomputed')
-    
-    dbs = davies_bouldin_score(sampler.wordOccuranceMatrix, sampler.dt_distribution.argmax(axis=1))
-    
-    chs = my_utils.coherence_score(sampler.wordOccuranceMatrix, list(sampler.getTopKWords(5).values()), sampler.vocabulary)
-    
-    hsc = my_utils.get_hscore_multi(sampler.dt_distribution, sampler.wordOccuranceMatrix, n_topics, 2000)
-    
-    loli = sampler.loglikelihood()
-    
-    pxy = sampler.perplexity()
+        ['amazon_home_20000', 'bert_0.95'],
+        ['amazon_home_20000', 'bert_attention'],
+        ['amazon_home_20000', 'fasttext_0.3'],
+        ['amazon_home_20000', 'fasttext_0.6'],
+        ['amazon_home_20000', 'glove_0.3'],
+        ['amazon_home_20000', 'glove_0.6'],
         
-    print("##", name, ss, dbs, chs, hsc, loli, pxy)
-    
+        ['amazon_kindle_20000', 'bert_0.95'],
+        ['amazon_kindle_20000', 'bert_attention'],
+        ['amazon_kindle_20000', 'fasttext_0.3'],
+        ['amazon_kindle_20000', 'fasttext_0.6'],
+        ['amazon_kindle_20000', 'glove_0.3'],
+        ['amazon_kindle_20000', 'glove_0.6'],
+        
+        ['amazon_movies_20000', 'bert_0.95'],
+        ['amazon_movies_20000', 'bert_attention'],
+        ['amazon_movies_20000', 'fasttext_0.3'],
+        ['amazon_movies_20000', 'fasttext_0.6'],
+        ['amazon_movies_20000', 'glove_0.3'],
+        ['amazon_movies_20000', 'glove_0.6'],
+        
+        ['imdb_reviews_20000', 'bert_0.95'],
+        ['imdb_reviews_20000', 'bert_attention'],
+        ['imdb_reviews_20000', 'fasttext_0.3'],
+        ['imdb_reviews_20000', 'fasttext_0.6'],
+        ['imdb_reviews_20000', 'glove_0.3'],
+        ['imdb_reviews_20000', 'glove_0.6'],
+        
+        ['twitter_airline_9061', 'bert_0.95'],
+        ['twitter_airline_9061', 'bert_attention'],
+        ['twitter_airline_9061', 'fasttext_0.3'],
+        ['twitter_airline_9061', 'fasttext_0.6'],
+        ['twitter_airline_9061', 'glove_0.3'],
+        ['twitter_airline_9061', 'glove_0.6']]
+
+
 def process_sampler(inp):
     
     dataset_name = inp[0]
     embedding_name = inp[1]
-    lambda_param = inp[2]
     
-    print(embedding_name, "entered")
+    print(dataset_name, embedding_name, "entered")
 
-    dataset = pd.read_pickle("resources/"+ dataset_name)
-    similar_words = pickle.load(open("resources/"+ embedding_name + ".pickle","rb"))
+    dataset = pd.read_pickle("datasets/" + dataset_name + "_dataset")
+    similar_words = pickle.load(open("resources/" + dataset_name + "_" + embedding_name + ".pickle","rb"))
     
     min_df = 5
     max_df = .5
-    maxIters = 5
+    maxIters = 20
 
     beta = .01
     gamma = 10
     n_topics = 5
+    lambda_param = 1.0
     n_sentiment = dataset.sentiment.unique().shape[0]
 
     alpha = 0.1/n_topics * np.ones(n_topics)
@@ -121,18 +94,17 @@ def process_sampler(inp):
 
     sampler = lda.SentimentLDAGibbsSampler(n_topics, alpha, beta, gamma, numSentiments=n_sentiment, SentimentRange = n_sentiment, max_df = max_df, min_df = min_df, lambda_param = lambda_param)
     
-    print(embedding_name, "started initialising")
     sampler._initialize_(reviews = dataset.text.tolist(), labels = dataset.sentiment.tolist())
 
-    print(embedding_name, "started sampler")
+    print(dataset_name, embedding_name, "started sampler")
     sampler.run(name=embedding_name, reviews=dataset.text.tolist(), labels=dataset.sentiment.tolist(), 
-                similar_words=similar_words, mrf=True, maxIters=maxIters)
-    
-    get_scores(embedding_name, sampler)
+                similar_words=similar_words, mrf=True, maxIters=maxIters, debug=False)
 
-    joblib.dump(sampler, "dumps/Uni_sampler_" + embedding_name + "_" + str(lambda_param))
-    print(embedding_name, "dumped")    
+    joblib.dump(sampler, "dumps/Uni_sampler_" + dataset_name + "_" + embedding_name)
+    print(dataset_name, embedding_name, "dumped")   
 
-pool = multiprocessing.Pool(45)
+pool = multiprocessing.Pool(40)
 pool.map(process_sampler, grid)
 pool.close()
+
+# process_sampler(grid[0])

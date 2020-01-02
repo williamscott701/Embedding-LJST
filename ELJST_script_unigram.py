@@ -69,7 +69,7 @@ def word_indices(wordOccuranceVec):
             
 class SentimentLDAGibbsSampler:
 
-    def __init__(self, numTopics, alpha, beta, gamma, numSentiments, SentimentRange, max_df = .7, min_df = .05, max_features = MAX_VOCAB_SIZE, lambda_param = 1):
+    def __init__(self, numTopics, alpha, beta, gamma, numSentiments, SentimentRange, max_df = .5, min_df = 5, max_features = MAX_VOCAB_SIZE, lambda_param = 1):
         """
         numTopics: Number of topics in the model
         numSentiments: Number of sentiments (default 2)

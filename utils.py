@@ -183,7 +183,7 @@ def get_hscore_multi(dt_distribution_, X_, k, testlen):
             combinations.append([i, j])
             dt_combinations.append((dt_distribution[i], dt_distribution[j]))
 
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(10)
     scores = pool.map(kl_score_multi, dt_combinations)
     pool.close()
 

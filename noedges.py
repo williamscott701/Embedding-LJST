@@ -118,18 +118,18 @@ def get_tokenized_text(text):
 
 ### Config
 
-dataset_names = ["twitter_airline_9061", "amazon_movies_100000"]
+dataset_names = ["imdb_reviews_20000", "amazon_movies_20000"]
 
 min_df = 5
 max_df = .5
 max_features = 50000
 
-n_cores = 40
+n_cores = 35
 
 for dataset_name in dataset_names:
     
     dataset = pd.read_pickle("datasets/"+ dataset_name + "_dataset")
-    print("Dataset read")
+    print(dataset_name, " read")
     
     vectorizer = CountVectorizer(analyzer="word",tokenizer=None,preprocessor=None,
                                  stop_words="english", max_features=max_features,
@@ -142,7 +142,6 @@ for dataset_name in dataset_names:
     pd.DataFrame(bertvocab).to_csv("resources/bertvocab_" + dataset_name + ".txt", header=None, index=None)
 
     ## Bert Embedding & Attention
-    print("Bert")
     embedding_name = 'bert'
 
     cutoff = 0.95
@@ -176,7 +175,7 @@ for dataset_name in dataset_names:
 
     pad_length = [len(i) for i in indexed_tokens]
 
-    print("Start Bert...")
+    print(dataset_name, "Start Bert...")
     idx = 0
     similar_words_bert = []
     similar_words_bert_attention = []
@@ -219,7 +218,7 @@ for dataset_name in dataset_names:
             similar_words_bert_attention.append(embeds)
             idx += 1
 
-    print("Done")
+    print(dataset_name, "Done")
     pickle_out = open("resources/"+ dataset_name + "_" + 'bert' + "_" + str(cutoff) + ".pickle","wb")
     pickle.dump(similar_words_bert, pickle_out)
     pickle_out.close()

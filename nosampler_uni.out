@@ -1,0 +1,346 @@
+amazon_electronics_20000 bert_0.95 entered
+amazon_electronics_20000 bert_attention entered
+amazon_electronics_20000 fasttext_0.3 entered
+amazon_electronics_20000 fasttext_0.6 entered
+amazon_electronics_20000 glove_0.3 entered
+amazon_electronics_20000 glove_0.6 entered
+amazon_home_20000 bert_0.95 entered
+amazon_home_20000 bert_attention entered
+amazon_home_20000 fasttext_0.3 entered
+amazon_home_20000 fasttext_0.6 entered
+amazon_home_20000 glove_0.3 entered
+amazon_home_20000 glove_0.6 entered
+amazon_kindle_20000 bert_0.95 entered
+amazon_kindle_20000 bert_attention entered
+amazon_kindle_20000 fasttext_0.3 entered
+amazon_kindle_20000 fasttext_0.6 entered
+amazon_kindle_20000 glove_0.3 entered
+amazon_kindle_20000 glove_0.6 entered
+amazon_movies_20000 bert_0.95 entered
+amazon_movies_20000 bert_attention entered
+amazon_movies_20000 fasttext_0.3 entered
+amazon_movies_20000 fasttext_0.6 entered
+amazon_movies_20000 glove_0.3 entered
+amazon_movies_20000 glove_0.6 enteredimdb_reviews_20000
+ bert_0.95 entered
+imdb_reviews_20000 bert_attention entered
+imdb_reviews_20000 fasttext_0.3 entered
+imdb_reviews_20000 glove_0.3 entered
+imdb_reviews_20000 glove_0.6 entered
+twitter_airline_9061 bert_0.95 entered
+twitter_airline_9061 fasttext_0.3 entered
+twitter_airline_9061 bert_attention entered
+imdb_reviews_20000 fasttext_0.6 entered
+twitter_airline_9061 fasttext_0.6 twitter_airline_9061entered glove_0.3
+ entered
+twitter_airline_9061 glove_0.6 entered
+1394 (9061, 1394)
+1394 (9061, 1394)
+1394 (9061, 1394)
+1394 (9061, 1394)
+1394 (9061, 1394)
+1394 (9061, 1394)
+4936 (20000, 4936)
+3998 (20000, 3998)
+3998 (20000, 3998)
+3783 (20000, 3783)
+3998 (20000, 3998)
+3998 (20000, 3998)
+5863 (20000, 5863)
+5863 (20000, 5863)
+3783 (20000, 3783)
+4936 (20000, 4936)
+4936 (20000, 4936)
+3783 (20000, 3783)
+4936 (20000, 4936)
+5863 (20000, 5863)
+5863 (20000, 5863)
+3998 (20000, 3998)
+3783 (20000, 3783)
+4936 (20000, 4936)
+5863 (20000, 5863)
+3783 (20000, 3783)
+8783 (20000, 8783)
+5863 (20000, 5863)
+3783 (20000, 3783)
+3998 (20000, 3998)
+8783 (20000, 8783)
+4936 (20000, 4936)
+8783 (20000, 8783)
+8783 (20000, 8783)
+8783 (20000, 8783)
+8783 (20000, 8783)
+twitter_airline_9061 glove_0.6 started sampler
+** glove_0.6 0
+twitter_airline_9061 fasttext_0.3 started sampler
+twitter_airline_9061 bert_attention started sampler
+** bert_attention 0
+twitter_airline_9061 fasttext_0.6 started sampler
+** fasttext_0.6 0
+twitter_airline_9061 bert_0.95 started sampler
+** fasttext_0.3 0
+** bert_0.95 0
+twitter_airline_9061 glove_0.3 started sampler
+** glove_0.3 0
+amazon_kindle_20000 glove_0.3 started sampler
+amazon_home_20000 bert_0.95 started sampler
+amazon_movies_20000 fasttext_0.6 started sampler
+** glove_0.3 0
+** fasttext_0.6 0
+amazon_home_20000 glove_0.3 started sampler
+amazon_kindle_20000 fasttext_0.6 started sampler
+amazon_kindle_20000 glove_0.6 started sampler
+amazon_movies_20000 glove_0.6 started sampler
+** fasttext_0.6 0
+** glove_0.6 0
+** glove_0.6 0
+amazon_kindle_20000 bert_attention started sampler
+amazon_movies_20000 glove_0.3 started sampler
+** bert_attention 0
+** bert_0.95 0
+** glove_0.3 0
+amazon_kindle_20000 bert_0.95 started sampler
+amazon_movies_20000 bert_0.95 started sampler
+** glove_0.3 0
+amazon_home_20000 fasttext_0.6 started sampler
+** fasttext_0.6 0
+amazon_electronics_20000 glove_0.6 started sampler
+amazon_movies_20000 bert_attention started sampler
+amazon_home_20000 bert_attention started sampler
+** glove_0.6 0
+amazon_movies_20000 fasttext_0.3 started sampler
+** bert_attention 0
+amazon_home_20000 glove_0.6 started sampler
+amazon_electronics_20000 glove_0.3 started sampler
+** bert_attention 0
+** glove_0.6 0
+amazon_electronics_20000 fasttext_0.6 started sampler
+amazon_kindle_20000 fasttext_0.3 started sampler
+** fasttext_0.6 0
+amazon_electronics_20000 fasttext_0.3 started sampler
+amazon_electronics_20000 bert_attention started sampler
+** bert_0.95 0
+** glove_0.3 0
+** bert_0.95 0
+** bert_attention 0
+amazon_electronics_20000 bert_0.95 started sampler
+amazon_home_20000 fasttext_0.3 started sampler
+** fasttext_0.3 0
+** fasttext_0.3 0
+** bert_0.95 0
+** fasttext_0.3 0
+** fasttext_0.3 0
+** fasttext_0.6 1
+imdb_reviews_20000 glove_0.6 started sampler
+** glove_0.6 0
+imdb_reviews_20000 bert_0.95 started sampler
+** glove_0.3 1
+** bert_0.95 0
+imdb_reviews_20000 fasttext_0.6 started sampler
+** fasttext_0.6 0
+imdb_reviews_20000 bert_attention started sampler
+** glove_0.6 1
+** bert_0.95 1
+** bert_attention 0
+** fasttext_0.3 1
+** bert_attention 1
+imdb_reviews_20000 glove_0.3 started sampler
+imdb_reviews_20000 fasttext_0.3 started sampler
+** glove_0.3 0
+** fasttext_0.3 0
+** fasttext_0.6 2
+** glove_0.3 2
+** glove_0.6 2
+** fasttext_0.3 2
+** bert_0.95 2
+** bert_attention 2
+** fasttext_0.6 3
+** glove_0.3 3
+** bert_0.95 3
+** glove_0.6 3
+** fasttext_0.3 3
+** bert_attention 3
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** fasttext_0.3 4
+** fasttext_0.3 5
+** fasttext_0.3 6
+** fasttext_0.3 7
+** fasttext_0.3 8
+** fasttext_0.3 9
+** fasttext_0.3 10
+** fasttext_0.3 11
+** fasttext_0.3 12
+** fasttext_0.3 13
+** fasttext_0.3 14
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** fasttext_0.3 1
+** bert_0.95 1
+** glove_0.3 1
+** fasttext_0.6 1
+** bert_attention 1
+** glove_0.6 1
+** glove_0.3 1
+** glove_0.6 1
+** bert_0.95 1
+** fasttext_0.6 1
+** bert_attention 1
+** fasttext_0.3 1
+** glove_0.6 1
+** bert_0.95 1
+** glove_0.3 1
+** bert_0.95 1
+** fasttext_0.6 1
+** fasttext_0.3 1
+** bert_attention 1
+** fasttext_0.3 1
+** fasttext_0.6 1
+** glove_0.3 1
+** glove_0.6 1
+** fasttext_0.3 1
+** bert_attention 1
+** glove_0.3 1
+** fasttext_0.6 1
+** bert_0.95 1
+** glove_0.6 1
+** bert_attention 1
+** glove_0.3 2
+** bert_0.95 2
+** fasttext_0.3 2
+** bert_attention 2
+** glove_0.6 2
+** fasttext_0.6 2
+** glove_0.6 2
+** bert_0.95 2
+** fasttext_0.6 2
+** bert_attention 2
+** bert_0.95 2
+** fasttext_0.3 2
+** glove_0.6 2
+** bert_0.95 2
+** glove_0.3 2
+** fasttext_0.3 2
+** bert_attention 2
+** glove_0.3 2
+** fasttext_0.3 2
+** bert_attention 2
+** fasttext_0.6 2
+** fasttext_0.3 2
+** fasttext_0.6 2
+** glove_0.3 2
+** glove_0.6 2
+** bert_0.95 2
+** glove_0.3 2
+** fasttext_0.6 2
+** glove_0.6 2
+** bert_attention 2
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** bert_0.95 3
+** glove_0.3 3
+** fasttext_0.3 3
+** glove_0.6 3
+** bert_attention 3
+** fasttext_0.6 3
+** glove_0.6 3
+** fasttext_0.6 3
+** bert_attention 3
+** bert_0.95 3
+** fasttext_0.3 3
+** glove_0.6 3
+** bert_attention 3
+** bert_0.95 3
+** glove_0.3 3
+** fasttext_0.3 3
+** fasttext_0.3 3
+** glove_0.3 3
+** fasttext_0.3 3
+** glove_0.3 3
+** bert_attention 3
+** fasttext_0.6 3
+** glove_0.6 3
+** fasttext_0.6 3
+** bert_0.95 3
+** fasttext_0.6 3
+** glove_0.6 3
+** glove_0.3 3
+** bert_attention 3
+** bert_0.95 4
+** glove_0.3 4
+** fasttext_0.3 4
+** glove_0.6 4
+** bert_attention 4
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** fasttext_0.6 4
+** fasttext_0.6 4
+** glove_0.6 4
+** bert_attention 4
+** glove_0.6 4
+** bert_0.95 4
+** fasttext_0.3 4
+** bert_attention 4
+** bert_0.95 4
+** glove_0.3 4
+** glove_0.3 4
+** fasttext_0.3 4
+** fasttext_0.3 4
+** glove_0.3 4
+** fasttext_0.6 4
+** glove_0.6 4
+** fasttext_0.3 4
+** bert_attention 4
+** bert_0.95 4
+** fasttext_0.6 4
+** fasttext_0.6 4
+** bert_attention 4
+** glove_0.3 4
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** glove_0.3 5
+** bert_0.95 5
+** glove_0.6 5
+** fasttext_0.3 5
+** bert_attention 5
+** fasttext_0.6 5
+** bert_attention 5
+** fasttext_0.6 5
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:217: RuntimeWarning: invalid value encountered in true_divide
+  topic_assignment /= topic_assignment.sum()
+/home/william18026/Embedding-LJST/ELJST_script_unigram.py:58: RuntimeWarning: invalid value encountered in greater_equal
+  return np.random.multinomial(1, theta).argmax()
+** bert_0.95 5
+** fasttext_0.3 5
+** glove_0.6 5
+** bert_attention 5
+** bert_0.95 5
+** glove_0.3 5
+** fasttext_0.3 5
+** glove_0.6 5
