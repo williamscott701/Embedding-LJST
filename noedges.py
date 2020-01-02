@@ -118,7 +118,7 @@ def get_tokenized_text(text):
 
 ### Config
 
-dataset_names = ["imdb_reviews_47405", "amazon_movies_100000"]
+dataset_names = ["twitter_airline_9061", "amazon_movies_100000"]
 
 min_df = 5
 max_df = .5
@@ -128,7 +128,7 @@ n_cores = 40
 
 for dataset_name in dataset_names:
     
-    dataset = pd.read_pickle("resources/"+ dataset_name + "_dataset")
+    dataset = pd.read_pickle("datasets/"+ dataset_name + "_dataset")
     print("Dataset read")
     
     vectorizer = CountVectorizer(analyzer="word",tokenizer=None,preprocessor=None,

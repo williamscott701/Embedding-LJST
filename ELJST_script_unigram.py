@@ -310,7 +310,7 @@ class SentimentLDAGibbsSampler:
     def perplexity(self):
         return np.exp(-self.loglikelihood()/self.wordOccuranceMatrix.sum())
 
-    def run(self, name, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100):
+    def run(self, name, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100, debug=False):
         """
         Runs Gibbs sampler for sentiment-LDA
         """
@@ -329,7 +329,11 @@ class SentimentLDAGibbsSampler:
         for iteration in range(maxIters):
             print("**", name, iteration)
             loglikelihood = 0
-            for idx, d in enumerate(range(numDocs)):
+            if debug:
+                r = trange(numDocs)
+            else:
+                r = range(numDocs)
+            for idx, d in enumerate(r):
                 for i, v in enumerate(word_indices(self.wordOccuranceMatrix[d, :])):
                     t = self.topics[(d, i)]
                     s = self.sentiments[(d, i)]

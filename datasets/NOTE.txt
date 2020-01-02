@@ -1,0 +1,5 @@
+from sklearn.model_selection import train_test_split
+dataset_ = pd.read_pickle(dataset_name)
+_, dataset = train_test_split(dataset_, test_size=0.2,random_state=42, stratify=dataset_.sentiment)
+
+## test_size = 0.422 for imdb reviews dataset
