@@ -113,48 +113,24 @@ def get_edges_transformers(text):
 
     return embeds
 
+def get_tokenized_text(text):
+    return [j for j in text if j in words]
+
 ### Config
 
-dataset_names = ["amazon_electronics", "amazon_home", "amazon_kindle", "amazon_movies"]
-get_df_names = ['reviews_Electronics_5.json.gz', 'reviews_Home_and_Kitchen_5.json.gz', 'reviews_Kindle_Store_5.json.gz', 'reviews_Movies_and_TV_5.json.gz']
+dataset_names = ["imdb_reviews_47405", "amazon_movies_100000"]
 
 min_df = 5
 max_df = .5
 max_features = 50000
-cutoffs = [0.3, 0.6]
 
 n_cores = 40
-n_docs = 100000
 
-### Start
-glove_embedding_dim = 300
-glove_embeddings_index = loadGloveModel("nongit_resources/glove.6B.300d.txt")
-fasttext_embedding_dim = 300
-fasttext_embeddings_index = gensim.models.KeyedVectors.load_word2vec_format("nongit_resources/wiki-news-300d-1M.vec")
-
-for dataset_name, get_df_name in zip(dataset_names, get_df_names):
+for dataset_name in dataset_names:
     
-    print("\n\n*************", dataset_name, get_df_name)
-
-    dataset_ = getDF('datasets/' + get_df_name)
-    dataset = dataset_.sample(n_docs*3)
-    dataset = dataset.drop(columns=['reviewerID', 'asin', 'reviewerName', 'helpful', 'summary', 'unixReviewTime', 'reviewTime'])
-    dataset = dataset.rename(columns={'reviewText': 'text', 'overall': 'sentiment'})
-
-    n = int(dataset.shape[0]/n_cores)
-    list_df = [dataset[i:i+n] for i in range(0, dataset.shape[0],n)]
-
-    pool = multiprocessing.Pool(n_cores)
-    processed_list_df = pool.map(process_df, list_df)
-    pool.close()
-
-    dataset = pd.concat(processed_list_df)
-    dataset = dataset[dataset.text.apply(lambda x: len(x.split(" "))>5 and len(x.split(" "))<200)].sample(n_docs).reset_index().drop(columns='index')
-    dataset.to_pickle("resources/"+ dataset_name + "_" + str(n_docs) + "_dataset")
-    print("Dataset dumped")
+    dataset = pd.read_pickle("resources/"+ dataset_name + "_dataset")
+    print("Dataset read")
     
-    dataset_ = None
-
     vectorizer = CountVectorizer(analyzer="word",tokenizer=None,preprocessor=None,
                                  stop_words="english", max_features=max_features,
                                  max_df=max_df, min_df=min_df)
@@ -163,62 +139,7 @@ for dataset_name, get_df_name in zip(dataset_names, get_df_names):
 
     words = vectorizer.get_feature_names()
     bertvocab = words + ['[CLS]', '[UNK]']
-    pd.DataFrame(bertvocab).to_csv("bertvocab.txt", header=None, index=None)
-
-    # Embeddings
-    print("Glove")
-
-    glove_word_embeddings = []
-
-    for word in tqdm(words):
-        emb = glove_embeddings_index.get(word, np.array([0]*glove_embedding_dim))
-        glove_word_embeddings.append(emb.tolist())
-
-    glove_word_embeddings = np.array(glove_word_embeddings)
-
-    g = ['glove', glove_word_embeddings]
-
-    print("Fasttext")
-    fasttext_word_embeddings = []
-
-    for word in tqdm(words):
-        emb = np.array([0]*glove_embedding_dim)
-        try:
-            emb = fasttext_embeddings_index[word]
-        except:
-            pass
-        fasttext_word_embeddings.append(emb.tolist())
-
-    fasttext_word_embeddings = np.array(fasttext_word_embeddings)
-
-    f = ['fasttext', fasttext_word_embeddings]
-
-    #### Grid
-    print("Grid")
-    for embedding_name, word_embeddings in [g, f]:
-        for cutoff in cutoffs:
-            print(embedding_name, cutoff)
-            word_similarity = cosine_similarity(word_embeddings)
-
-            remove = np.where(word_similarity == 1)
-
-            for i, j in zip(remove[0], remove[1]):
-                word_similarity[i][j] = 0
-                word_similarity[j][i] = 0
-
-            word_similarity = word_similarity > cutoff
-            word_similarity = word_similarity.astype(int)
-            np.fill_diagonal(word_similarity, 0)
-
-            wordOccuranceMatrixBinary = wordOccurenceMatrix.copy()
-            wordOccuranceMatrixBinary[wordOccuranceMatrixBinary > 1] = 1
-
-            pool = multiprocessing.Pool(n_cores)
-            similar_words = pool.map(get_edges, wordOccuranceMatrixBinary)
-            pool.close()
-            pickle_out = open("resources/"+ dataset_name + "_" + str(n_docs) +"_" + embedding_name + "_" + str(cutoff) + ".pickle","wb")
-            pickle.dump(similar_words, pickle_out)
-            pickle_out.close()
+    pd.DataFrame(bertvocab).to_csv("resources/bertvocab_" + dataset_name + ".txt", header=None, index=None)
 
     ## Bert Embedding & Attention
     print("Bert")
@@ -230,14 +151,18 @@ for dataset_name, get_df_name in zip(dataset_names, get_df_names):
 
     model = BertModel.from_pretrained(pretrained_weights, output_hidden_states=True, output_attentions=True)
 
-    tokenizer = BertTokenizer(vocab_file='bertvocab.txt', never_split=True, do_basic_tokenize=False)
+    tokenizer = BertTokenizer(vocab_file="resources/bertvocab_" + dataset_name + ".txt", never_split=True, do_basic_tokenize=False)
 
     tokenized_text = [tokenizer.tokenize(i) for i in dataset.text]
 
-    temp = []
-    for i in tokenized_text:
-        t = [j for j in i if j in words]
-        temp.append(t)
+#     temp = []
+#     for i in tokenized_text:
+#         t = [j for j in i if j in words]
+#         temp.append(t)
+        
+    pool = multiprocessing.Pool(n_cores)
+    temp = pool.map(get_tokenized_text, tokenized_text)
+    pool.close()
 
     tokenized_text = temp
 
@@ -247,7 +172,7 @@ for dataset_name, get_df_name in zip(dataset_names, get_df_names):
 
     input_ids = torch.tensor(input_ids)
 
-    input_ids = torch.split(input_ids, 1000, dim=0)
+    input_ids = torch.split(input_ids, 500, dim=0)
 
     pad_length = [len(i) for i in indexed_tokens]
 
@@ -295,10 +220,10 @@ for dataset_name, get_df_name in zip(dataset_names, get_df_names):
             idx += 1
 
     print("Done")
-    pickle_out = open("resources/"+ dataset_name + "_" + str(n_docs) +"_" + 'bert' + "_" + str(cutoff) + ".pickle","wb")
+    pickle_out = open("resources/"+ dataset_name + "_" + 'bert' + "_" + str(cutoff) + ".pickle","wb")
     pickle.dump(similar_words_bert, pickle_out)
     pickle_out.close()
 
-    pickle_out = open("resources/"+ dataset_name + "_" + str(n_docs) +"_" + 'bert_attention'+ ".pickle","wb")
+    pickle_out = open("resources/"+ dataset_name + "_" + 'bert_attention'+ ".pickle","wb")
     pickle.dump(similar_words_bert_attention, pickle_out)
     pickle_out.close()

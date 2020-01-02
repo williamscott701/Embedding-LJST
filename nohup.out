@@ -1,0 +1,86 @@
+amazon_electronics_100000_bert_0.95 entered
+amazon_electronics_100000_bert_attention entered
+amazon_electronics_100000_fasttext_0.3 entered
+amazon_electronics_100000_fasttext_0.6 en  1%|▊                                                                                  | 1/95 [02:20<3:40:45, 140.91s/it]  2%|█▋                                                                                 | 2/95 [07:55<5:08:30, 199.04s/it]  3%|██▌                                                                                | 3/95 [10:12<4:36:36, 180.40s/it]  4%|███▍                                                                               | 4/95 [12:10<4:05:06, 161.61s/it]  5%|████▎                                                                              | 5/95 [15:21<4:15:35, 170.40s/it]  6%|█████▏                                                                             | 6/95 [18:03<4:09:08, 167.96s/it]  7%|██████                                                                             | 7/95 [20:38<4:00:37, 164.06s/it]  8%|██████▉                                                                            | 8/95 [29:06<6:27:43, 267.40s/it]ion started initialising
+amazon_kindle_100000_bert_attention started initialising
+amazon_electronics_100000_bert_attention started initialising
+amazon_home_100000_glove_0.6 started initialising
+amazon_home_100000_fasttext_0.6 started initialising
+imdb_reviews_47405_fasttext_0.6 started initialising
+imdb_reviews_47405_glove_0.6 started initialising
+amazon_electronics_100000_glove_0.6 started initialising
+amazon_kindle_100000_glove_0.6 started initialising
+amazon_electronics_100000_fasttext_0.6 started initialising
+amazon_kindle_100000_fasttext_0.6 started initialising
+amazon_movies_100000_glove_0.6 started initialising
+amazon_movies_100000_fasttext_0.6 started initialising
+amazon_home_100000_glove_0.3 started initialising
+amazon_home_100000_bert_0.95 started initialising
+amazon_kindle_100000_glove_0.3 started initialising
+imdb_reviews_47405_glove_0.3 started initialising
+amazon_electronics_100000_glove_0.3 started initialising
+imdb_reviews_47405_bert_0.95 started initialising
+amazon_home_100000_fasttext_0.3 started initialising
+amazon_movies_100000_glove_0.3 started initialising
+amazon_kindle_100000_fasttext_0.3 started initialising
+amazon_kindle_100000_bert_0.95 started initialising
+amazon_electronics_100000_bert_0.95 started initialising
+amazon_electronics_100000_fasttext_0.3 started initialising
+imdb_reviews_47405_fasttext_0.3 started initialising
+amazon_movies_100000_fasttext_0.3 started initialising
+amazon_home_100000_fasttext_0.3 started sampler
+amazon_home_100000_bert_0.95 started sampler
+amazon_home_100000_bert_attention started sampler
+** amazon_home_100000_bert_attention 0
+** amazon_home_100000_bert_0.95 0
+** amazon_home_100000_fasttext_0.3 0
+amazon_home_100000_glove_0.6 started sampler
+** amazon_home_100000_glove_0.6 0
+amazon_home_100000_glove_0.3 started sampler
+amazon_home_100000_fasttext_0.6 started sampler
+** amazon_home_100000_fasttext_0.6 0
+** amazon_home_100000_glove_0.3 0
+imdb_reviews_47405_bert_attention started sampler
+** imdb_reviews_47405_bert_attention 0
+imdb_reviews_47405_fasttext_0.6 started sampler
+amazon_kindle_100000_fasttext_0.6 started sampler
+imdb_reviews_47405_glove_0.3 started sampler
+** imdb_reviews_47405_fasttext_0.6 0
+** amazon_kindle_100000_fasttext_0.6 0
+amazon_kindle_100000_glove_0.3 started sampler
+imdb_reviews_47405_fasttext_0.3 started sampler
+** imdb_reviews_47405_glove_0.3 0
+** amazon_kindle_100000_glove_0.3 0
+amazon_electronics_100000_fasttext_0.6 started sampler
+** amazon_electronics_100000_fasttext_0.6 0
+amazon_electronics_100000_glove_0.3 started sampler
+amazon_kindle_100000_fasttext_0.3 started sampler
+amazon_electronics_100000_bert_attention started sampler
+** amazon_electronics_100000_bert_attention 0
+** amazon_electronics_100000_glove_0.3 0
+** imdb_reviews_47405_fasttext_0.3 0
+amazon_kindle_100000_glove_0.6 started sampler
+** amazon_kindle_100000_glove_0.6 0
+imdb_reviews_47405_glove_0.6 started sampler
+** imdb_reviews_47405_glove_0.6 0
+** amazon_kindle_100000_fasttext_0.3 0
+amazon_kindle_100000_bert_attention started sampler
+** amazon_kindle_100000_bert_attention 0
+imdb_reviews_47405_bert_0.95 started sampler
+amazon_electronics_100000_fasttext_0.3 started sampler
+amazon_kindle_100000_bert_0.95 started sampler
+amazon_electronics_100000_glove_0.6 started sampler
+** amazon_electronics_100000_glove_0.6 0
+** imdb_reviews_47405_bert_0.95 0
+** amazon_electronics_100000_fasttext_0.3 0
+amazon_electronics_100000_bert_0.95 started sampler
+** amazon_kindle_100000_bert_0.95 0
+** amazon_electronics_100000_bert_0.95 0
+amazon_movies_100000_glove_0.6 started sampler
+** amazon_movies_100000_glove_0.6 0
+amazon_movies_100000_glove_0.3 started sampler
+** amazon_movies_100000_glove_0.3 0
+amazon_movies_100000_fasttext_0.6 started sampler
+** amazon_movies_100000_fasttext_0.6 0
+amazon_movies_100000_fasttext_0.3 started sampler
+** amazon_movies_100000_fasttext_0.3 0

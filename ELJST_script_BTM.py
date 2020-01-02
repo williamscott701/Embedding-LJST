@@ -139,7 +139,7 @@ def word_indices(wordOccuranceVec):
             
 class SentimentLDAGibbsSampler:
 
-    def __init__(self, numTopics, alpha, beta, gamma, numSentiments=100, minlabel = 0, maxlabel = 10, SentimentRange = 10, max_df = .4, min_df = 5, max_features = MAX_VOCAB_SIZE, lambda_param = 1): 
+    def __init__(self, numTopics, alpha, beta, gamma, numSentiments, SentimentRange = 10, max_df = .4, min_df = 5, max_features = MAX_VOCAB_SIZE, lambda_param = 1): 
         """
         numTopics: Number of topics in the model
         numSentiments: Number of sentiments (default 2)
@@ -155,8 +155,6 @@ class SentimentLDAGibbsSampler:
         self.gamma = gamma
         self.numTopics = numTopics
         self.numSentiments = numSentiments
-        self.minlabel = minlabel
-        self.maxlabel = maxlabel
         self.SentimentRange = SentimentRange
         self.lambda_param = lambda_param
         self.probabilities_ts = {}
@@ -181,7 +179,7 @@ class SentimentLDAGibbsSampler:
         binsize = self.SentimentRange*1.0/self.numSentiments
         for i in self.vocabulary:
             l.append(sid.polarity_scores(i).get('compound',np.nan))
-        clf = MinMaxScaler(feature_range = (self.minlabel,self.maxlabel))
+        clf = MinMaxScaler(feature_range = (0,self.numSentiments))
         l = clf.fit_transform(np.array(l))
         l = [min(int(i/binsize)-1,0) for i in l]
         self.priorSentiment = dict(zip(list(self.vocabulary.keys()),l))
@@ -443,7 +441,7 @@ class SentimentLDAGibbsSampler:
 
         return worddict
         
-    def run(self, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100, skipgramwindow=5):
+    def run(self, name, reviews, labels, similar_words, unlabeled_reviews=[], mrf = True, maxIters=100, skipgramwindow=5, debug=False):
         """
         Runs Gibbs sampler for sentiment-LDA
         """
@@ -460,9 +458,13 @@ class SentimentLDAGibbsSampler:
             self.docs_edges.append(edges)
         
         for iteration in range(maxIters):
-            print("Starting iteration %d of %d" % (iteration + 1, maxIters))
+            print("**", name, iteration)
             loglikelihood = 0
-            for idx, d in enumerate(trange(numDocs)):
+            if debug:
+                r = trange(numDocs)
+            else:
+                r = range(numDocs)
+            for idx, d in enumerate(r): #trange
             
                 if d in self.allbigrams:
                     
