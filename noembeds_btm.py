@@ -18,8 +18,7 @@ import ELJST_script_BTM as lda
 import matplotlib.pyplot as plt
 
 
-grid = ["amazon_electronics_20000", "amazon_home_20000", "amazon_kindle_20000",
-        "amazon_movies_20000", "imdb_reviews_20000", "twitter_airline_9061"]
+# grid = ["amazon_electronics_20000"]
 
 def process_sampler(dataset_name):
     
@@ -46,14 +45,17 @@ def process_sampler(dataset_name):
     
     sampler._initialize_(reviews = dataset.text.tolist(), labels = dataset.sentiment.tolist(), skipgramwindow=5)
 
-    sampler.run(name=dataset_name, reviews=dataset.text.tolist(), labels=dataset.sentiment.tolist(), 
-                similar_words=similar_words, mrf=True, maxIters=maxIters, debug=False)
-    
-    joblib.dump(sampler, "dumps/BTM_sampler_" + dataset_name + "_noembeds")
-    print(dataset_name, "dumped")
-    
-pool = multiprocessing.Pool(10)
-pool.map(process_sampler, grid)
-pool.close()
+    try:
+        sampler.run(name=dataset_name, reviews=dataset.text.tolist(), labels=dataset.sentiment.tolist(), 
+                    similar_words=similar_words, mrf=True, maxIters=maxIters, debug=False)
 
-# process_sampler(grid[0])
+        joblib.dump(sampler, "dumps/BTM_sampler_" + dataset_name + "_noembeds")
+        print(dataset_name, "dumped")
+    except:
+        print(dataset_name, embedding_name, "failed")
+    
+# pool = multiprocessing.Pool(10)
+# pool.map(process_sampler, grid)
+# pool.close()
+
+process_sampler(grid[0])

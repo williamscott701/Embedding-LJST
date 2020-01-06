@@ -118,7 +118,7 @@ def get_tokenized_text(text):
 
 ### Config
 
-dataset_names = ["imdb_reviews_20000", "amazon_movies_20000"]
+dataset_names = ["amazon_electronics_2_20000", "amazon_movies_2_20000"]
 
 min_df = 5
 max_df = .5

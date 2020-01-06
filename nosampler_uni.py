@@ -19,43 +19,19 @@ import matplotlib.pyplot as plt
 
 
 
-grid = [['amazon_electronics_20000', 'bert_0.95'],
-        ['amazon_electronics_20000', 'bert_attention'],
+grid = [['amazon_electronics_20000', 'bert_attention'],
         ['amazon_electronics_20000', 'fasttext_0.3'],
         ['amazon_electronics_20000', 'fasttext_0.6'],
         ['amazon_electronics_20000', 'glove_0.3'],
         ['amazon_electronics_20000', 'glove_0.6'],
         
-        ['amazon_home_20000', 'bert_0.95'],
-        ['amazon_home_20000', 'bert_attention'],
-        ['amazon_home_20000', 'fasttext_0.3'],
-        ['amazon_home_20000', 'fasttext_0.6'],
-        ['amazon_home_20000', 'glove_0.3'],
-        ['amazon_home_20000', 'glove_0.6'],
-        
-        ['amazon_kindle_20000', 'bert_0.95'],
-        ['amazon_kindle_20000', 'bert_attention'],
-        ['amazon_kindle_20000', 'fasttext_0.3'],
-        ['amazon_kindle_20000', 'fasttext_0.6'],
-        ['amazon_kindle_20000', 'glove_0.3'],
-        ['amazon_kindle_20000', 'glove_0.6'],
-        
-        ['amazon_movies_20000', 'bert_0.95'],
-        ['amazon_movies_20000', 'bert_attention'],
-        ['amazon_movies_20000', 'fasttext_0.3'],
-        ['amazon_movies_20000', 'fasttext_0.6'],
-        ['amazon_movies_20000', 'glove_0.3'],
-        ['amazon_movies_20000', 'glove_0.6'],
-        
         ['imdb_reviews_20000', 'bert_0.95'],
         ['imdb_reviews_20000', 'bert_attention'],
         ['imdb_reviews_20000', 'fasttext_0.3'],
         ['imdb_reviews_20000', 'fasttext_0.6'],
-        ['imdb_reviews_20000', 'glove_0.3'],
         ['imdb_reviews_20000', 'glove_0.6'],
         
         ['twitter_airline_9061', 'bert_0.95'],
-        ['twitter_airline_9061', 'bert_attention'],
         ['twitter_airline_9061', 'fasttext_0.3'],
         ['twitter_airline_9061', 'fasttext_0.6'],
         ['twitter_airline_9061', 'glove_0.3'],
@@ -96,13 +72,16 @@ def process_sampler(inp):
     
     sampler._initialize_(reviews = dataset.text.tolist(), labels = dataset.sentiment.tolist())
 
-    print(dataset_name, embedding_name, "started sampler")
-    sampler.run(name=embedding_name, reviews=dataset.text.tolist(), labels=dataset.sentiment.tolist(), 
-                similar_words=similar_words, mrf=True, maxIters=maxIters, debug=False)
+    try:
+        print(dataset_name, embedding_name, "started sampler")
+        sampler.run(name=dataset_name+"_"+embedding_name, reviews=dataset.text.tolist(), labels=dataset.sentiment.tolist(), 
+                    similar_words=similar_words, mrf=True, maxIters=maxIters, debug=False)
 
-    joblib.dump(sampler, "dumps/Uni_sampler_" + dataset_name + "_" + embedding_name)
-    print(dataset_name, embedding_name, "dumped")   
-
+        joblib.dump(sampler, "dumps/Uni_sampler_" + dataset_name + "_" + embedding_name)
+        print(dataset_name, embedding_name, "dumped")   
+    except:
+        print(dataset_name, embedding_name, "failed")
+        
 pool = multiprocessing.Pool(40)
 pool.map(process_sampler, grid)
 pool.close()

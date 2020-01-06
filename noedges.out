@@ -1,0 +1,4 @@
+Using TensorFlow backend.
+amazon_electronics_2_20000  read
+amazon_electronics_2_20000 Start Bert...
+  0%|                                                                                              | 0/40 [00:00<?, ?it/s]  2%|██▏                                                                                   | 1/40 [00:25<16:22, 25.20s/it]

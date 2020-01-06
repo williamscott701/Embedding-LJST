@@ -84,7 +84,7 @@ def preprocess_lite(pd):
     return pd
 
 def processReviews(reviews, window=5, MAX_VOCAB_SIZE=50000):
-    vectorizer = CountVectorizer(analyzer="word", tokenizer=None, max_df=0.7, min_df = 7, max_features=MAX_VOCAB_SIZE)
+    vectorizer = CountVectorizer(analyzer="word", tokenizer=None, max_df=0.5, min_df = 5, max_features=MAX_VOCAB_SIZE)
     count_matrix = vectorizer.fit_transform(reviews)
     words = vectorizer.get_feature_names()
     vocabulary = dict(zip(words,np.arange(len(words))))
